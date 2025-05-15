@@ -1,0 +1,29 @@
+E2 :: Libraries and requirements
+
+During the previous example, we installed the Black library using pip.
+Here we are going to see a way to better manage our requirements at the same time that we will make it easier for us to share them
+
+First, while we can use pip to install packages one by one in our environment, if we simply go installing them one by one manually, it would be difficult to know what packages we require in our project when we want to move it from development to production environment, so instead lets create a requirements file.
+
+For this, we can create a "requirements.txt" file on the top of the source path. In this file, we will record all the libraries we have installed.
+For now, lets add the Black library.
+We are going to use it to install also a new library, DotEnv, so our file should look like this:
+requirements.txt >>>
+black
+dotenv
+<<<
+
+Now we can manage our libraries with the command:
+$ pip install -r requirements.txt 
+
+This command will perform the pip install of all the libraries on the requirements file, in case they are not already installed.
+
+In addition to the name of the library, we can also specify the version, otherwise the latest one will be used.
+For example, we could use version 0.9.9 of dotenv with "dotenv==0.9.9". This is useful to ensure that the same level of libraries is used in all environments.
+
+
+In addition to recording manually the installed libraries, we can also use the Freeze command of pip to produce the list of libraries currently installed in our environment:
+$ pip freeze > requirements.txt 
+In this case, you will see not only the ones you have installed manually, but also you will find the list of dependencies automatically installed.
+
+** If you use requirements_final.txt or requirements_final_freeze.txt, it will install all the libraries used during these examples instead, either from manual install of from pip freeze command.

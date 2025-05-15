@@ -1,2 +1,2 @@
 black
-dotenv==0.9.9
+python-dotenv

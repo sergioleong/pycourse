@@ -1,29 +1,57 @@
-E2 :: Libraries and requirements
+E2 :: File types, Conditionals and Loops
+# Files:
+- examples/e2.py
+----------------
 
-During the previous example, we installed the Black library using pip.
-Here we are going to see a way to better manage our requirements at the same time that we will make it easier for us to share them
+Before we start creating our code, we first need to know the basic of with we are working for.
 
-First, while we can use pip to install packages one by one in our environment, if we simply go installing them one by one manually, it would be difficult to know what packages we require in our project when we want to move it from development to production environment, so instead lets create a requirements file.
+# Data Types
+Python provides by default different data types that we can use.
 
-For this, we can create a "requirements.txt" file on the top of the source path. In this file, we will record all the libraries we have installed.
-For now, lets add the Black library.
-We are going to use it to install also a new library, DotEnv, so our file should look like this:
-requirements.txt >>>
-black
-dotenv
-<<<
+First we have the base types that provide simple values:
+- Boolean : Defined as True/False or as a result of a boolean function (e.g. comparisson)
+- Integer : Natural number
+- Float : Decimal number (uses dot to separate decimal part)
 
-Now we can manage our libraries with the command:
-$ pip install -r requirements.txt 
+In addition, we have some important data types that provides us easy ways to work with text and byte information:
+- String : A sequence of characters. Eg. "Hello"
+- Byte : A sequence of bytes. Eg. b'Hello'
 
-This command will perform the pip install of all the libraries on the requirements file, in case they are not already installed.
+Then we have data types that provide groups of values:
+- List : Mutable list of values. Eg. [1,1,2,3]
+- Tuple : Inmutable list of values. Eg. (1,1,2,3)
+- Set : Mutable set of values without repetition. Eg. (1,2,3)
+- Dictionary : Map between key and value. Eg. {1:1, "a":2}
 
-In addition to the name of the library, we can also specify the version, otherwise the latest one will be used.
-For example, we could use version 0.9.9 of dotenv with "dotenv==0.9.9". This is useful to ensure that the same level of libraries is used in all environments.
+Finally, an useful type is Range, that provides us a way to navigate between a list values without having to number all of them.
+
+# Working with lists
+Lists are one of the more used collections in python as they provide a good number of options.
+
+First we can create an empty list with [] or a list with any number of elements in it of any type.
+For our example, let's create an empty list named "mylist".
+
+We can use function len to see how many elements are currently on the list with len(mylist). 
+We can also check if the list is empty with the not clause "not mylist", this is the equivalent of list.empty() in other languages
+
+Now, we can add some values to it using the function append with mylist.append(value). 
+These don't need to be even of the same type as we can put anything in there.
 
 
-In addition to recording manually the installed libraries, we can also use the Freeze command of pip to produce the list of libraries currently installed in our environment:
-$ pip freeze > requirements.txt 
-In this case, you will see not only the ones you have installed manually, but also you will find the list of dependencies automatically installed.
+We can remove the last inserted element using the function pop "mylist.pop()", that will not only remove it from the end of the list, but return it to use. This is useful when you need the list to act like a stack of elements.
 
-** If you use requirements_final.txt or requirements_final_freeze.txt, it will install all the libraries used during these examples instead, either from manual install of from pip freeze command.
+But we can also pop elements on specific points if we provide the index of them "mylist.pop(index)". Remember that indices start in 0. This is an easy way to implement a queue in python, although there are specific classes for that if we require better performance.
+
+If we only want to query for a value in an specific position we can do that with [], like "mylist[index]".
+While indices start in 0 as in most common languages, we can also use negative indices. Negative indices will start at the last element on the list from -1 being the last element on the list.
+
+*Note:It's important to take into account that we always need to remain in the range of indices valid for our list, otherwise we will see a out of range exception.
+
+In addition to query specific values, we can also get subranges if we provide the initial and final indice separated by ":", like "mylist[i:j]", this will return a new list with all elements from indice i until j (j not included).
+Not only that, but we can leave any of the indices empty to provide the list with all elements from the first or to the last (in the same way as if we used indices 0 and -1)
+
+Finally, we can merge 2 list simply adding them and we will get a new list containing all the elements on both.
+
+
+*NOTE:
+While all the actions listed here are valid for lists, it's your turn to see which ones are valid for other data types too.
