@@ -1,0 +1,75 @@
+E1 :: Formating
+
+In this exercise we check some formating requirements and use the library "black" to autoformat text.
+
+First, make a copy of "e1_original.py" as "e1.py" and open the copy in the editor.
+$ cp examples/e1_original.py examples/e1.py
+
+#Comments
+On the top of this file, we can see 3 different "comments", meaning code that has no use appart from providing information:
+
+- A normal comment prefixed by the symbol "#". Unlike normal code, comments can be idented without breaking the execution
+- A single-line string without returning to anything. This code and not a comment, although has similar behaviour.
+- A multi-line string without returning to anything. As for single-line strings, this is technically code and not a comment, so it follows the same rules. But multi-line strings are commonly accepted as comments as they provide an easy way to comment huge pieces of text and also, as we will see later, they are used in different libraries to provide extra information.
+
+#Code blocks and identation
+Now we have 3 blocks of code.
+
+First one is a valid code block.
+Python defines it's blocks of code based on the identation of the code. Format wise, this code has too many spaces, but as all code is idented the same, it's valid.
+
+Then we have a block of code idented, but with different identations, that it's not valid.
+
+Finally, we have a block of code defined in the traditional C/Java way. This is not valid in python and will not execute.
+
+#Making the code executable
+If you try to execute the code as it is, it will fail at multiple points:
+$ python examples/e1.py 
+
+Now let's correct the different issues.
+
+- First issue are the 2 string with extra identation on the comment sections.
+If you execute the code as it is, you will see an error like:
+        File "/path/examples/e1.py", line 6
+            'Unlike comments, a string cannot simply be idented'
+        IndentationError: unexpected indent
+So let's remove the extra identation on both strings on lines 6 and 10.
+
+- Next issue is again caused by a wrong identation. In this case, on the second block of code, each line has a different identation. To correct that, let's just remove the extra iddents in line 27
+
+- Finally, we get to the C/Java formated block.
+If we try to execute this, we will get first an error like:
+        File "/path/examples/e1.py", line 30
+            print("does this work");print("Same as Java or C?")
+                                ^
+        SyntaxError: invalid syntax
+This first error is caused by the fact that in Python we cannot separate statements by the symbol ";" like in other languages. In this case, we need to write each in a different line.
+
+If we execute now, we will see another error:
+        File "/path/examples/e1.py", line 30
+            print("does this work")
+            ^^^^^^^^^^^^^^^^^^^^^^^
+        SyntaxError: invalid syntax. Perhaps you forgot a comma?
+The cause of this error is that in python "{}" does not define a block of code but is used to define sets and dictionaries. In this case we can correct this first error simply removing the bracket
+
+
+After these corrections, we can execute again and see the whole output of the example.
+
+
+#Making the formating cleaner
+
+While the code works now, the format itself doesn't look really right.
+Luckily, we have tools to automate these details.
+For this, we are going to use the library "Black". This library provides an easy way to format code with some general rules in terms of identation, comments, etc.
+
+To use that, we are going to first install it with pip to install it within our virtual environment
+$ pip install black
+
+Once installed we can simply execute it to format our file with
+$ black examples/e1.py
+
+After the execution you will see multiple changes on the file.
+First, all comments will now have a space after the "#" symbol.
+Identation is also corrected to have the same number of spaces in each level.
+
+This library will make other format changes on more complex codes, but you can start seeing the benefits of it already on this small piece.

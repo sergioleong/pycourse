@@ -1,0 +1,24 @@
+E0 :: Create Virtual Environment
+
+In this exercise we will create a virtual environment named "env"
+
+1- Go to the Source code path 
+
+2- Create the environment with:
+$ python3 -m venv env
+
+3- Activate the environment with:
+$ . env/bin/activate
+
+* After the environment is activated, we will see "(env)" at the right side of the console
+
+4- Now we can check that the environment is working correctly checking the path for python/pip executables:
+$ which python
+$ which pip
+
+5- Finally, we can deactivate the environment with
+$ deactivate
+
+
+**NOTE:
+We are going to keep using this environment for the rest of the course, so keep it activated while doing the exercises
