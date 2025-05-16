@@ -1,0 +1,25 @@
+E6 :: Strings
+
+Strings are one of the main data types in Python. 
+As we have seen multiple times in previous examples, we have different ways to create strings: They can be created with single or double quotes, and we can create multi-line strings using triple quotes of either kind.
+
+Like in other languages, we can use + to concatenate two strings together and also use different functions like .upper() and .lower() to transform a string into uppercase or lowercase.
+
+Like with collictions, we can also use the len() function to get the length of a string, or "in" to check if a substring exists in a string. 
+
+We can also use methods like .find() or .count() to find the position of a substring in a string or the number f repetitions, and the .replace() method to replace a substring with another one.
+
+We can split a string into a list of words using the .split() method, for example using spaces or commas. We can also merge multiple values into a unique string using the .join() method.
+And we can clean spaces at the beginning and end of a string using the .strip() method.
+
+Like with lists, we can also use indices to either get specific characters or substrings, simply giving the first and last characters index. 
+Also, we can also use negative indexes to count from the end of a string, of course.
+
+
+Finally, strings can be formatted.
+We have been doing it all this time with f-strings (f"text {variable} text").
+This type of string is called an f-string an it's a way to format a string in Python where we simply put an f before the opening quotation mark and then use curly braces {} to indicate where the variables should be inserted, and python will automatically replace the variable with its value.
+
+We can also use .format() method if we want to provide the formating more dinamically.
+This uses the same sintax as f-strings where the variable to be replaced is indicated by a curly brace {} and then the variable name.
+The benefit of this method is that it's more flexible and allows use to reuse one template for multiple values.
