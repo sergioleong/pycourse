@@ -1,2 +1,143 @@
-E3 :: Main file and imports
+E4 :: Main file, imports and functions
 
+Until now, we have executed our code directly running each specific python file, but that limits the flexibility of our program to a unique file. 
+Instead, we are going to create a main.py file which will import all other files in the examples folder and execute them based on what is passed as an argument.
+
+So, for example, if we want to execute example e1, we would run:
+$ python main.py e1
+
+First, let's create our main.py file on our source code path.
+
+Path: main.py
+print("Hello World")
+
+If we execute this script, it will print "Hello World" in the terminal.
+But this will be executed every time this code is processed, even if we simply wanted to import this code from a different python file. 
+
+So, instead, lets make sure that our code is only executed when we run it directly.
+
+Path: main.py
+if __name__ == '__main__':
+    print("Hello World")
+
+Now, if we try to run this script again, it will print again "Hello World" in the terminal. 
+But if we want to import this file from another python file, it won't be executed.
+
+
+Next, we want to be able to get the example name to execute from what is passed as an argument.
+For that, we are going to import the library sys which will allow us to access arguments passed in when running our script using the argv attribute.
+
+Path: main.py
+import sys
+if __name__ == '__main__':
+    print("Hello World")
+    if len(sys.argv) < 2:
+        print("No example selected")
+    else:
+        example_id = sys.argv[1]
+        print(f'Executing {example_id}')
+
+Now, we can run our script with the name of an example as a parameter. 
+For example: "python main.py e4" will print "Executing e4".
+
+Here there are two things to note:
+- The first thing is that we imported the whole sys library with the import statement.
+    This allows us to access all the attributes and methods of the sys library, such as argv which contains the arguments passed in when running our script.
+- The second thing is that we have a conditional statement inside the main function.
+    If there are no arguments passed in when running our script, it will print "No example selected".
+    In this condition, we checked not the lenght as 1 but as 2 because argv[0] contains the name of the file being executed, meaning that our first argument will be always on argv[1].
+
+
+Now that we have a way to run our script with an example as a parameter, let's make it possible to run them dinamically as requested.
+To do that, we are going to first create a list of examples in our main file. Those will be the ones that we accept execution from the user and add a conditional check to see if the example the user has requested is a valid one. For now let's add only "e4" to the list (we will create it shortly).
+
+
+Path: main.py
+import sys
+examples = [ "e4"]
+if __name__ == '__main__':
+    print("Hello World")
+    if len(sys.argv) < 2:
+        print("No example selected")
+    else:
+        example_id = sys.argv[1]
+        if example_id in examples:
+            print(f'Executing {example_id}')
+        else:
+            print(f'Invalid example {example_id}')
+
+Now, the main file can tell us if an example id has been provided and if it's valid, but don't really execute anything yet, so let's solve that.
+Here we are going to use the __import__ function which allows us to import modules dynamically at runtime. While not the most common function, this is very useful when we want to execute different modules based on user input or other variables.
+
+Path: main.py
+        ···
+        if example_id in examples:
+            print(f'Executing {example_id}')
+            __import__(f'examples.{example_id}')
+       ···
+
+As you can see we are defined the file to load as <folder>.<file> without the .py extension.
+
+Now, if we try to run our script with "python main.py e4", it will try to import "examples.e4" and gives us a ModuleNotFoundError because it does not exist yet.
+
+So now let's create a new file called "e4.py" so it can be executed.
+
+First, lets create an empty file "__init__.py" in the examples folder. This is needed for Python to recognize the directory as a package in order to manage imports correctly.
+
+Next, let's create a e4.py within the examples folder this content:
+
+Path: examples/e4.py
+print("This is example 4")
+
+
+Now, if we run our script with "python main.py e4", it will print out "This is example 4".
+The problem is that if we execute "python examples/e4.py" directly, it will also the same, something that we want to avoid.
+Instead, let's modify our e4.py file so it contains a function called main with all the code in it.
+To define a function, we use the keyword def followed by the name of the function and parentheses. Inside the parentheses you can add parameters if needed. In this case, let's pass argv as an argument to the function.
+
+Path: examples/e4.py
+def main(argv):
+    print("This is example 4")
+    print(argv)
+
+Now, if we run either our "python main.py e4", or "python examples/e4.py", it won't print anything, because all code in e4 is within the main function and we didn't call it.
+
+To solve that, let's modify our main script to not only import dynamically the example file, but also tell it to load its main function, saving the result into the cls variable. 
+
+Path: main.py
+        ···
+        if example_id in examples:
+            print(f'Executing {example_id}')
+            cls = __import__(f'examples.{example_id}', globals(), locals(), fromlist=['main'])
+       ···
+
+Finally, we add the the execution of the function with "cls.main(sys.argv[2:])".  This will call function main from the loaded example and pass to it the sys.argv list as an argument, removing the script name and example id.
+
+Path: main.py
+import sys
+examples = [ "e4"]
+if __name__ == '__main__':
+    print("Hello World")
+    if len(sys.argv) < 2:
+        print("No example selected")
+    else:
+        example_id = sys.argv[1]
+        if example_id in examples:
+            print(f'Executing {example_id}')
+            cls = __import__(f'examples.{example_id}', globals(), locals(), fromlist=['main'])
+            cls.main(sys.argv[2:])
+        else:
+            print(f'Invalid example {example_id}')
+
+
+Now, if we run the script with "python main.py e4", we get:
+    Executing e4
+    Hello World
+    []
+While running "python examples/e4.py" won't print anything as the main function is not called automatically.
+
+In addition, as we are passing the sys.argv as argument, we can access any extra argument in our function.
+For example, if we run "python main.py e4 'hello world'", we get:
+    Executing e4
+    Hello World
+    ['hello world']

@@ -1,6 +1,8 @@
 E2 :: File types, Conditionals and Loops
 # Files:
-- examples/e2.py
+- examples/e2_types.py
+- examples/e2_lists.py
+- examples/e2_conditionals.py
 ----------------
 
 Before we start creating our code, we first need to know the basic of with we are working for.
@@ -9,6 +11,7 @@ Before we start creating our code, we first need to know the basic of with we ar
 Python provides by default different data types that we can use.
 
 First we have the base types that provide simple values:
+- None : Defined as the lack of any value
 - Boolean : Defined as True/False or as a result of a boolean function (e.g. comparisson)
 - Integer : Natural number
 - Float : Decimal number (uses dot to separate decimal part)
@@ -42,6 +45,9 @@ We can remove the last inserted element using the function pop "mylist.pop()", t
 
 But we can also pop elements on specific points if we provide the index of them "mylist.pop(index)". Remember that indices start in 0. This is an easy way to implement a queue in python, although there are specific classes for that if we require better performance.
 
+Lists also provide an easy way to check if an element exists in it, using the "in" command as "value in mylist". This let us find out if an element is already on a list or not.
+Then, we can use the function remove to remove the same element from it "mylist.remove(value)".
+
 If we only want to query for a value in an specific position we can do that with [], like "mylist[index]".
 While indices start in 0 as in most common languages, we can also use negative indices. Negative indices will start at the last element on the list from -1 being the last element on the list.
 
@@ -55,3 +61,16 @@ Finally, we can merge 2 list simply adding them and we will get a new list conta
 
 *NOTE:
 While all the actions listed here are valid for lists, it's your turn to see which ones are valid for other data types too.
+
+
+# Conditional and loops
+
+In Python, we can work with conditional clauses as in any other language.
+For starters, the default data types each have a conditional result depending on their content. 
+Similar as languages like C where an integer 0 is considered false and the rest true, python considers as False the value 0 as well as empty strings or collections.
+
+Of course, we can use boolean operations like "not", "and" or "or" with those values.
+
+Then, we have two different types of loops:
+- For loops, used to navigate through all elements in a list, range, etc.
+- While loops, used to repeat the same block of code until a condition fails

@@ -1,4 +1,4 @@
-E2 :: Libraries and requirements
+E3 :: Libraries and requirements
 
 During the previous example, we installed the Black library using pip.
 Here we are going to see a way to better manage our requirements at the same time that we will make it easier for us to share them

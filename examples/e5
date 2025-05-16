@@ -1,0 +1,52 @@
+E5 :: Environment variables
+
+As you may be familiar with, environment variables are an easy way to store data that can be accessed by any program running on your computer. 
+They are typically set in the operating system's configuration files and can be used to store sensitive information such as API keys or database credentials.
+
+By default, Python allows access to these variables through the os module.
+For example, if we want to print out the value of our PATH environment variable we would run:
+
+import os   
+print(os.getenv("PATH"))
+
+This will output something like:
+/usr/local/bin:/usr/bin:/bin
+
+Environment variables in python are managed similarly to the previos sys.argv value we saw earlier.
+In this case, environment variables are stored within the os.environ dictionary.
+Given that, we can use that as any other dictionary to list all of our environment variables, add new ones, etc.
+
+* It's important to note that while we can modify the environment variables within our execution, any change on them will not persist after the program has finished executing.
+
+
+Now, while this way we can access environment variables already defined in our session, we can use them also to work with a .env file that contains all of our sensitive information for our current project.
+
+For this, we are going to create a new .env file in our source code path with the following content all our secrets in a key:value format.
+
+Path: .env
+MYKEY=1234567890
+
+With this, this .env file will allow us to access our secrets without having to hardcode them in our code. But we need to make sure we have it loaded before accessing any of those values. 
+We can do so by using the dotenv library that we have installed in E3. 
+This is a simple python package that allows us to load environment variables from a .env file.
+
+Let's create a new file called e5.py and add the following code and add "e5" to our main file:
+
+Path: examples/e5.py
+import os
+from dotenv import load_dotenv
+def main(argv):
+    load_dotenv()
+    if argv:
+        print(f"This is the content of {argv[0]} environment variable:")
+        print(os.getenv(argv[0]))
+
+Now, if we execute "python main.py e5 MYKEY", it will print the content of the MYKEY environment variable as requested.
+If we try the same with an unknown key like "MYKEY2", it will return None instead.
+
+
+By default, dotenv loads the ".env" file in the current directory. 
+If you need to load different environment files, you can use the "load_dotenv()" function and pass the path of your .env file as a parameter.
+
+For example:    
+oad_dotenv(".dev.env")

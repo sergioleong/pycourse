@@ -1,23 +1,3 @@
-# Let's create a list of values
-values = [
-    True,
-    1,
-    1.1,
-    "hello",
-    b"hello",
-    (1, 2),
-    [1, 2],
-    {1, 2},
-    {1: 1, 2: 2},
-    {"a": 1, "b": 2},
-    range(10),
-]
-
-# For each value, let's see it's given type
-for v in values:
-    print(f"The type of {v} is {type(v)}")
-print("")
-
 # Working with lists
 print("Working with lists:")
 
@@ -44,6 +24,11 @@ print(f"mylist now has lenght: {len(mylist)}")
 e = mylist.pop(2)
 print(f'we have removed the 3th element "{e}": {mylist}')
 print(f"mylist now has lenght: {len(mylist)}")
+
+print(f'mylist contains "c"? : {"c" in mylist}')
+print(f'Lets remove element "c"')
+mylist.remove("c")
+print(f'mylist contains "c"? : {"c" in mylist}')
 
 
 print(f'the first element in mylist is 0 : "{mylist[0]}"')
