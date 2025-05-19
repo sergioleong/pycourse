@@ -1,2 +1,4 @@
 black
 python-dotenv
+requests
+flask

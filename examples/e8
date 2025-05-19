@@ -1,0 +1,20 @@
+E8 :: JSON
+
+Now that we know how to work with files, let's focus on one specific kind of files, JSON files.
+
+For this, we are going to use the json module.
+
+This module can be used with both files and strings.
+
+First, when using files, we need to open a file in read or write mode as we did in the previous example.
+Then, we can load the content from that file using the load function "json.load(file)", or write our data into it using the dump function "json.dump(data,file)".
+
+In the case of strings, we can use the loads function "json.loads(json_string)" or dumps function "json.dumps(data)". Both functions are parallel to the load and dump functions and share the same extra parameters as those functions.
+
+
+When reading JSON data, it will be converted automatically to a Python object. 
+For example, if you have a JSON string like this:
+    {"name": "John", "age": 30}
+it till be conberted automatically into a dictionary in Python. While a JSON string like:
+    [1,2,3]
+will be converted to a list.
