@@ -2,8 +2,6 @@ import requests
 import json
 
 def main(argv) :
-    
-
     server_url = 'http://localhost:5000/'
     data = readAll(server_url)
     print(data)
@@ -13,6 +11,12 @@ def main(argv) :
     insert(server_url, name="George", age=70)
     last_id = insert(server_url, name="Ringo", age=56)
 
+    data = get(server_url, last_id)
+    print(data)
+    
+    data = update(server_url, last_id, "MJ", age=60)
+    print(data)
+    
     data = get(server_url, last_id)
     print(data)
 
@@ -56,6 +60,22 @@ def insert(server_url, name, age):
         "age": age
     }
     r = requests.put(f'{server_url}/add', headers=headers, json=new_object)
+    if r.status_code == 201:
+        data = r.json()['data']
+        print(data)
+        return data['id']
+    else:
+        print(f'Error: {r.status_code}')
+        return None
+        
+def update(server_url, id, name, age):
+    print(f"Update Object {id}")
+    headers = {"content-type": "application/json"}
+    new_object = {
+        "name": name,
+        "age": age
+    }
+    r = requests.post(f'{server_url}/{id}', headers=headers, json=new_object)
     if r.status_code == 201:
         data = r.json()['data']
         print(data)

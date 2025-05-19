@@ -18,7 +18,6 @@ def get_id(id):
     global cur_data
     try:
         id = int(id)
-        print(type(id))
         for i in range(len(cur_data)):
             if cur_data[i]['id']==id:
                 return jsonify(data=cur_data[i]), 200
@@ -26,13 +25,35 @@ def get_id(id):
             return jsonify(error=404, text="Object not found"), 404
     except Exception as e:
         return jsonify(error=400, text="Invalid input"), 400
+
+@app.route("/<int:id>", methods=['POST'])
+def update(id):
+    global cur_data
+    try:
+        id = int(id)
+        data = request.json
+        keys = data.keys()
+
+        for key in required_keys:
+            if key not in keys:
+                return jsonify(error=500, text=f"Missing required key {key}"), 500
+
+        for i in range(len(cur_data)):
+            print(id, cur_data[i]['id'])
+            if cur_data[i]['id']==id:
+                for key in required_keys:
+                    cur_data[i][key]=data.get(key)
+                return jsonify(data=cur_data[i]), 201
+        return jsonify(error=404, text="Object not found"), 404
+    except Exception as e:
+        print(e)
+        return jsonify(error=400, text="Invalid input"), 400
         
 @app.route("/<int:id>", methods=['DELETE'])
 def delete_id(id):
     global cur_data
     try:
         id = int(id)
-        print(id)
         res = [i for i in cur_data if i['id'] != id]
         if len(res) == len(cur_data):
             return jsonify(error=404, text="Object not found"), 404
@@ -51,10 +72,6 @@ def add():
     try:
         data = request.json
         keys = data.keys()
-
-        if 'id' in required_keys:
-            return jsonify(error=500, text="Cannot add object with id"), 500
-
         for key in required_keys:
             if key not in keys:
                 return jsonify(error=500, text=f"Missing required key {key}"), 500
@@ -70,4 +87,4 @@ def add():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port='43560')
+    app.run(host='0.0.0.0', port='5000')

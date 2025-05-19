@@ -1,1 +1,76 @@
 E8 :: Requests and REST APIs
+
+Until now we have worked only with local resources, but in a real world application you will need to work with remote data, and the most common way of doing this is by using HTTP requests. 
+
+#Setting up
+We are going to use the requests module from Python's standard library. 
+For this, we will use the `requests` module from Python's standard library.
+We can install it via pip adding the line "requests" to our requirements.txt file and executing:
+    pip install -r requirements.txt
+
+As you may have noticed, we are not working with a local resource anymore. We are now requesting data from an external server. In this case, we will be using a simple rest server provided in test_server.py.
+To run the server, first we will need to install "flask" library in the same way as we installed "requests" a moment ago.
+Once installed, we can start our test server with:
+    python test_server.py
+This will start our test server listening to port 5000 on localhost (127.0.0.1).
+
+#Making requests
+Now that we have our server running, let's make some requests. 
+
+We are going to create a function representing each of the interactions we want to perform with our server:
+- readAll: Will get all the objects from the server
+- get : Will get an object by its id
+- insert : Will add a new object to the server
+- update : Will update an existing object in the server
+- delete : Will remove an object from the server
+
+As our server works with json data, we will include in all our requests the header "content-type": "application/json".
+
+In addition, we are goint to use the status code for each request to check if the request had been a success or a failure (latter we will se another option to handle errors via exceptions).
+
+# GET - ReadAll & Get
+For starters, we are going to create our first functions that will query the server for existing objects. For that we will use the "requests.get" function.
+
+The usage in this case is as simple as this:
+    r = requests.get(url, headers=headers)
+In case of having URI parameters, we could add them as a dictionary with the optional argument params: 
+    r = requests.get(url, params={'key': 'value','key': 'value'}, headers=headers)
+
+In any case, this function will return an object that contains all the data related to our query.
+In our case, we will focus specifically in 2 of the values/functions on that response:
+- status_code: This value is going to be used to check if the request was a success or not. If it's equal to 2XX, then everything went well and we can continue with our code.
+- content : It contains the actual response from the server.
+- json(): This function will return all the data in JSON format. (It's the same as doing json.loads(r.content))
+
+For this, we will create 2 functions that will be used for reading objects from our server:
+- readAll(server_url): This function will return all the data stored in the server.
+- get(server_url, id): This function will return an object with the specific ID provided as a parameter.
+
+In both cases, we will simply compare the response code from the server with 200 and print the result if request is successful.
+
+
+# PUT - Insert
+In order to create a new object on the server, we need to use the HTTP method PUT. This function will be used for creating objects in our server.
+The parameters that we are going to pass as an argument are:
+- url: The URL of the server where we want to make the request.
+- json: It contains all the information related to the object that we want to create on the server.
+- headers: This is a dictionary with the headers that will be used for this request. In our case, we are going to use "application/json" as the content type.
+    r = requests.put(url, headers=headers, json=json)
+While not used in this case, we could also provide URI parameters with the optional "params" like with GET request or other data with "data" (specially if we weren't using json data), or files with "files".
+
+Like with the GET function, requests.put() returns an object with all the information related to the response from the server.
+
+
+# POST - Update
+Similarly to PUT, we will use the method POST to update an existing object on the server.
+In this case, we are going to use exactly the same parameters as for PUT, but with the main difference that we are going to add the id to modify in the URL.
+    r = requests.post(url, headers=headers, json=json)
+
+In a lot of cases, servers use POST method also to create new objects as both methods are mostly similar.
+
+# DELETE - Delete
+We will now delete an object from our server. To do so, we will use the DELETE method.
+
+Like with GET, in this case we only need to provide the URL of the object we want to remove as no new data needs to be added.
+    r = requests.delete(url, headers=headers)
+Although data could be added like with PUT or POST methods (e.g. sending a confirmation code or similar).
