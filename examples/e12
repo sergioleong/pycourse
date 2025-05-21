@@ -1,0 +1,7 @@
+E12 :: Testing
+
+Until now we have provided the tools to write our programs, but we haven't tested them.
+In thi section we will solve that using "pytest". A commont testing library for python.
+
+First, we will add the "pytest" to our requirements file and install it.
+

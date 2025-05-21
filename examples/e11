@@ -1,0 +1,65 @@
+E11 :: Exceptions and Errors
+
+Until this point, we have considered only that our code could be executed without any errors.
+And while that's true from the point of view of the code itself, if it's correctly written,
+it can still raise an error when it is run, specially if we depend on user input or external services.
+
+In order to capture those errors and provide a solution to them avoiding or program to crash, we will use try/except blocks.
+The basic syntax of the block is:
+    try:
+        # code that may raise an error
+    except :
+        # code to handle the exception
+
+With this code, we will be able to catch any type of error and provide a solution for it, but we can also get the exception itself:
+    try:
+        # code that may raise an error
+    except Exception as e:
+        # code to handle the exception
+        # the exception will be saved in the variable 'e'
+
+Sometimes, we can also be interested in what kind of exception was raised. For example, if we want to know whether it's a ValueError or any other we can do this:
+    try:
+        # code that may raise an error
+    except ValueError as e:
+        # code to handle ValueError exceptions
+    except Exception as e:
+        # code to handle other exceptions
+        
+In addition to catching and treating exceptions, we can use the "else" clause to execute code when no exception was raised. For example:
+    try:
+        # code that may raise an error
+    except :
+        # code to handle the exception
+    else:
+        # code to be executed if there's no exception
+
+This is similar to having the else code at the end of the try block like:
+    try:
+        # code that may raise an error
+        # code to be executed if there's no exception
+    except Exception as e:
+        # code to handle the exception
+But in this case we will be sure that any new exception on the else block won't be catched by the "except" clause.
+
+If we want to execute some code regardless of whether an exception was raised or not, we can use the "finally" clause. For example:
+    try:
+        # code that may raise an error
+    except :
+        # code to handle the exception
+    else:
+        # code to be executed if there's no exception
+    finally:
+        # code to be executed regardless of whether an exception was raised or not
+
+In most cases, the "finally" will be similar to executing that code after the whole try/except block, but as it's guaranted to execute, it can be used for example for cleaning up resources if, let's say the try/except block is used to return a value either if there was an exception or not.
+Example:
+    def my_fun():
+        # Code that open a file
+        try:
+            # code that may raise an error
+            return True
+        except Exception as e:
+            return False
+        finally:
+            #Code that close the file
