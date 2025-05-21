@@ -1,0 +1,111 @@
+E10 :: Classes and Objects
+
+Until now we have been using only default types like ints and strings, but also objects from different modules.
+Now, we are going to create our own classes.
+Classes are a way of grouping data (variables) and functions (methods) together. We can think of them as blueprints for creating objects.
+
+In order to create a class in Python, we will use the keyword "class" followed by the name of your class:
+    class MyClass:
+
+Within a class, we can define methods similarly to how we defined functions until now.
+The main different between a function and a class method is that the first parameter of a method is always the object itself, normally called as "self".
+
+There are few default methods in Python classes. The most important ones are:
+    __init__: This method is called when an object is created and it's used to initialize its attributes.
+    __str__: This method returns a string representation of an object.
+
+There are also other methods like __eq__, __len__ or __repr__. These are special methods that allow you to customize the behavior of your class in certain situations. For example, if you want to compare two objects of your class, Python will use the __eq__ method by default.
+    def __eq__(self, other):
+        return self.name == other.name
+
+Now let's use this information on classes to create a simple game where our player will fight against different monsters.
+
+First, we are going to create our main class "Character". This class is going to be the base for all characters in our game, both our player and the enemies.
+All characters will have some attributes like name, hp (health points), strength, money and status. The status attribute will tell us if a character is alive or dead.
+
+class Character:
+    def __init__(self, name : str, hp : int, strength : int, money : int):
+        self.name = name
+        self.hp = hp
+        self.hp_total = hp
+        self.status = 'alive'
+        self.strength = strength
+        self.money = money
+
+As you can see, we are using the __init__ method to initialize our object, named "self". It's important to remember than in python the current object is passed as an argument. This is important as, unlike languages like Java were the context of the method allows us to directl access the current object attributes, in python we have to access them from the self object.
+
+
+With only this, we could already create some characters. For example:
+    enemy = Character("goblin", hp=10, strength=3, money=5)
+This will create a character with name "goblin" and 10 health points and a strength of 3.
+
+But if we only wanted to have that small information, we could simply have used a dictionary instead, so now let's add some methods to our Character class.
+
+First, we can redefine the __str__ method to print the character name and health points.
+    def __str__(self):
+        return f"{self.name} - {self.hp}/{self.hp_total}"
+
+With that, if we now print our enemy object:
+    print(enemy)
+We will get this output:
+    goblin - 10/10
+
+We can add our own methods also. For eample let's add 3 different methods to be used during our game:
+    - attack_turn(self) : this method will return a tuple with the hit points and type of attack done by the character
+    - defense_turn(self, damage, type) : this method will reduce the health points of the character depending on the damage received and type
+    - alive(self) : this method will check if the character is still alive or not.
+
+
+With that, we can already have our characters battle eahch other. We just need to loop between attack and defense. For that we could use a method in Character class called "battle" which would take the enemy character as an argument and have them battle in a loop until one of them dies.
+    def battle(self, other : 'Character')
+
+But with this, the game is a little boring, so let's make things a little more complex.
+First, we are going to create new types of enemies. For that we will use inheritance and polymorphism.
+
+In python, all classes extend a default Object class, and we don't need to specify it explicitly in our code, but we can also extend other classes as well.
+In order to extend from another class, we just need to add the name of the parent class after the child class name. For example:
+    class MyClass(ParentClass):
+With this, all methods and attributes defined in ParentClass will be available for use in MyClass.
+
+Then, we can redefine some methods or create new ones, and those will be used instead of the original ones when called.
+
+For example, let's add two types of special characters that will have a different way to attack.
+    class GhostType(Character)
+    class WallType(Character)
+
+For these classes, we will redefine the method for attacking and defending.
+For GhostType we will make it so the attack is off magic type instead of physical, and that when defending only magic attacks can hurt the character.
+For WallType, instead of attacking, we will recover some health points and return a zero damage.
+
+Now, while we could write all the logic from scratch for each overwriten method, in the case of GhostType defense method, we can see that it is almost identical to Character's one, just cancelling the attack if it's not magical. 
+So instead of writting all the logic again, let's call our parent function.
+For this we can use the "super()" method. This is used to access the parent functions from a child class.
+in this case we can simply call:
+    def defense_turn(self, damage : int, type : str):
+        if type == 'magic':
+            super().defense_turn(damage, type)
+
+This will override the original defense function performing a check for the attack type first and then continue with the parent's method if it's a magical one.
+
+
+
+Ok, now we can have different kinds of monsters, but everything is automatic, even our default character. Even worst, as our character only uses physical attacks, it can't even defeat GhostType enemies.
+So now let's create a new Player class that inherits from Character, but let's us have some control over it's actions.
+First, our Player will have some more attributes than default characters. For example, as we have enemies that can only be defeated by magic, let's give the player some magic damage, and to make the game more interesting, also the option of healing itself.
+For this we will add two new attributes to the __init__ function (magic and healing):
+    def __init__(self, name : str, hp : int, strength : int, money : int, magic : int, healing : int):
+Now, like with the overwrite before, we will use the "super()" method to call the parent's __init__ functionand perform all the default set-up:
+        super().__init__(name, hp, strength, money)
+And finally we will initialize the new attributes:
+        self.magic = magic
+        self.healing = healing
+
+Then, we can overwrite the attack method like we did for out other classes, this time we can make it ask the user to choose between physical attack, magic or healing.
+In this case, we will use the input function and a while loop to ensure that the player enters one of the three options and perform our action depending on their choice.
+
+Finally, it's not required for extended classes to only overwrite parent methods, but we can define new ones as well.
+In this case, let's add a new method for our player so it can earn some money from the defeated enemies.
+This will be a simple function that will take an integer parameter and will add it to the player's money attribute.
+
+
+And with that, our small game is done, and we have created our firsts set of classes.
