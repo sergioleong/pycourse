@@ -3,6 +3,7 @@ E2 :: File types, Conditionals and Loops
 - examples/e2_types.py
 - examples/e2_lists.py
 - examples/e2_conditionals.py
+- examples/e2_more_lists.py
 ----------------
 
 Before we start creating our code, we first need to know the basic of with we are working for.
@@ -74,3 +75,36 @@ Of course, we can use boolean operations like "not", "and" or "or" with those va
 Then, we have two different types of loops:
 - For loops, used to navigate through all elements in a list, range, etc.
 - While loops, used to repeat the same block of code until a condition fails
+
+# Lists Comprehension
+
+As we have seen before, lists are quite powerful, but we can do a lot more with them.
+Not only we can create them manually or convert from other data types (like converting a range into a list), but we can also use what is named list comprehension.
+
+List comprehension is a way to generate new lists based on existing ones or other iterable objects like ranges or strings.
+The syntax is as follows:
+    [value_expression  for item in iterable]
+
+For example, while we can convert a range from 0 to 9 into a list with the following code:
+    list(range(10))
+We could use list comprehension to create a new list based on the values of that range, for example the squares of those numbers:
+    [x*x for x in range(10)]
+
+And the value doesn't have to be a simple value, but we can return anything valid like tuples, strings, etc.
+For example, if we want to create a list with all pairs (x,x*x) from 0 to 9:
+    [(x,x*x) for x in range(10)]
+
+While this is already quite powerful, we can also add some conditions to our comprehension in order to filter out some values from our original iterable. 
+    [value_expression  for item in iterable if condition]
+For example, let's say that we only want the numbers that are not divisible by three. We can do this with a conditional expression inside the list comprehension:
+    [(x,x*x) for x in range(10) if x%3 != 0]
+
+List comprehesion can also be used as nested loops substitutes as we can merge multiple in one line like:
+    [value_expression(a,b)  for a in iterable_A for b in iterable_B]
+For example, let's say that we want to create a list with all pairs (x,y,x*y) where x is from 0 to 3 and y is from 0 to 4. We can do this as:
+    [(x,y,x*y) for x in range(4) for y in range(5)]
+
+These nested loops can also be dependent on the values from the other, so we can create a link of for loops where the inner one depends on the outer one. 
+    [value_expression(x) for Y in iterable for x in Y]
+For example, we could use that to create a list with all cells in a matrix where the outer loop would give us each row and the inner loop each cell on that row:
+    g = [cell for row in matrix for cell in row] -> {g}

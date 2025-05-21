@@ -16,7 +16,7 @@ def main(argv) :
     
     data = update(server_url, last_id, "MJ", age=60)
     print(data)
-    
+
     data = get(server_url, last_id)
     print(data)
 
