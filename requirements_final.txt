@@ -3,3 +3,4 @@ python-dotenv
 requests
 flask
 pytest
+pytest-mock

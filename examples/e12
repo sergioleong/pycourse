@@ -3,5 +3,139 @@ E12 :: Testing
 Until now we have provided the tools to write our programs, but we haven't tested them.
 In thi section we will solve that using "pytest". A commont testing library for python.
 
-First, we will add the "pytest" to our requirements file and install it.
+First, we will add the "pytest" and "pytest-mock" packages to our requirements file and install it.
 
+If we now run pytest in our project directory, we should see a list of tests. If you have downloaded the full example code, you will find that there is already one collection of tests: examples/test_e12.py.
+This is because pytest automatically looks for files with the name "test_*.py" or "*_test.py".
+Within those files, it also searches for functions starting with "test_" and runs them.
+
+
+Now, let's see how to write a test. 
+In the example, we are going to test few simple functions in module e12.py, like testing if a number is even or odd, a division of two numbers, etc.
+We will start by writing our tests in examples/test_e12.py:
+
+For each test, we will create a function in the form:
+    def test_...():
+Within those functions we can test different things.
+
+The first test we are going to see are assertions. 
+Assertions are used to check if something is true or false, be it a variable, an expression, etc.
+To write an assertion we will use the "assert" keyword like this:
+    assert <expression>
+If the expression evaluates to True, then the test procees, otherwise the test will be marked as failed.
+
+For example:
+def test_calculate_even_number_true():
+    assert is_even(2)
+--> This will pass because 2 is an even number.
+def test_calculate_odd_number_false():
+    assert not is_even(1)
+--> This will fail because 1 is an odd number.
+
+In addition to assertions, we can also test for exceptions.
+That's useful in order to be sure that our code also fails as we expect it should. 
+In order to do that, we use the "pytest.raises" function like this:
+    with pytest.raises(<exception>):
+        <expression>
+This will check if our expression raises an exception of type <exception>.
+For example:
+def test_calculate_string_error():
+    with pytest.raises(TypeError):
+        is_even('hello')
+--> This will fail because we are trying to pass a string as an argument, which should raise a TypeError.
+
+
+Within tests, we can also use some methods that are provided by the pytest framework itself.
+One of those is the "approx" method that allows us to check if a value is close enough to another one. This is useful as we are not always able to check for exact values.
+We can do that by using the approx method, like this:
+    assert 1/3 == pytest.approx(0.33333333333333)
+--> This will pass because 1/3 is close enough to 0.33333333333333.
+
+In addition to checking the option of checking values and possible exceptions, we can also use decorators to extend our tests.
+
+NOTE: Decorators are functions that take another function as an input and return a new function. We are not going to enter into detail here, but you can think about those as something that is used to modify or enhance the behavior of other functions.
+
+For example, we have a decorator called "pytest.mark.xfail" which allows us to mark tests as expected to fail. We can use it like this:
+    @pytest.mark.xfail(reason="why does it fail")
+    def test_...():
+This kind of tests are useful for tests that we know will fail or functionality is not implemented yet. In the summary of out testing we won't see them as failed either case, but we can differentiate between a failure (x) and a success (X).
+
+We can also mark tests to be skipped using decorators like "pytest.mark.skip" or "pytest.mark.skipif". 
+In the case of "skip", the test will be always skipped, and as before we can use this as either a placeholder for a future test or a test for a feature that is not yet implemented.
+    @pytest.mark.skip(reason="why we skip")
+    def test_...():
+On the other hand, "skipif" allows us to mark tests to be skipped if a certain condition is met.
+    @pytest.mark.skipif(<condition>, reason="Why we skip it")
+    def test_...():
+In this case, if the condition is true, then the test will be skipped, otherwise it will be executed as usual. 
+This is useful for example to skip tests that depend on the environment we are running our code in or a certain configuration (E.g. test only for WIN/LINUX).
+
+Another useful decorator is "parametrize". This decorator allows us to run a test multiple times with different set of parameters. This decorator is a little more complex than the previous ones, but also very powerful.
+    @pytest.mark.parametrize(<parameters>, <values>)
+    def test_...(parameters):
+This decorator takes two arguments: 
+    - The first one is a list of parameter names that will be used to access the parameters in the test function.
+    - The second argument is a list of tuples, where each tuple contains the parameters for a different test.
+For example:
+    @pytest.mark.parametrize(["a", "b"], [(1, 5), (2, 4), (3, 3)])
+    def test_addition_6(a, b):
+        assert a+b = 6
+In this case, our test function takes 2 arguments, a and b, and checks that their sum is equal to 6. In our decorator we first specify the parameters to use ("a" and "b"), then we provide a list of tuples with the values for each parameter.
+
+
+Another useful decorator are fixtures. Fixtures allow us to define reusable test data or setup/teardown code that can be used by multiple tests.
+Fixtures are defined using the pytest.fixture decorator. Here's an example:
+    @pytest.fixture()
+    def <fixture_name>():
+        return <value>
+This will define a fixture called <fixture_name>, which returns the value <value> that we can pass to our test functions as arguments.
+    def test_...(fisture_name):
+This will automatically execute the fixture before each test and pass the return value of the fixture into the test function.
+E.g.:
+    @pytest.fixture()
+    def username():
+        return 'my_username'
+    def test_valid_users(username):
+        assert is_valid_username(username)
+
+While this example is quite simple, those can be more complex, like creating a database connection or setting up some other data for the tests to use.
+
+
+Now, let's see also some built-in fixtures that are provided by pytest.
+
+First, we have capsys and capfd. These allow us to capture stdout and stderr output from our test functions. This allows us to not only check the return value of a function but also its output. For example:
+    def test_print(capsys):
+        print('Hello, world!')
+        captured = capsys.readouterr()
+        assert captured.out == 'Hello, world!\n'
+        assert captured.err == ''
+In this test, we would be capturing the stdout and stderr outputs of the test until now. Then we can then check that they are as expected.
+
+def test_file(tmp_path):
+Another useful fixture is tmp_path. This allows us to create temporary files or directories for our tests that will be automatically cleaned up after the test has finished running. For example:
+    def test_create_file(tmp_path):
+        filename = tmp_path / 'test.txt'
+        content = 'Hello, world!'
+        create_file(filename, content)
+        assert os.path.exists(filename)
+        assert os.path.isfile(filename)
+        new_content = read_file(filename)
+        assert new_content == content
+In this example, we are creating a temporary file in the directory specified by tmp_path and then reading its contents to make sure it was created correctly.
+After the test is done, the file will be automatically deleted.
+
+Finally, we are going to create a mock response object using pytest-mock.
+Mocks are used to replace objects that would normally be used in our code with fake versions of those objects. This is useful for testing purposes because it allows us to control what happens when certain functions or methods are called without actually having to execute them, like for the case of destructive functions or functions using external APIs that may or may not be available.
+
+To create a mock response, we use the Mock function of the mocker fixture. This returns os a mock object that we can update with our own values. After that, we can use the function patch of the mock object to define what will it be replacing.
+
+For example, we can use a mock object to replace a request function in our code. E.g.:
+    def test_url_mock(mocker):
+        # Create a mock response object
+        mock_response = mocker.Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = <some value>
+        mock_response.raise_for_status.return_value = None
+        mocker.patch('requests.get', return_value=mock_response)
+        assert do_something()
+In this example, if our do_something functions call the requests.get function, that will be replaced with our mock object, ensuring that the external call won't affect the result of the test.
