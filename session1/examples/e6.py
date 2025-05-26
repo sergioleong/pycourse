@@ -36,7 +36,7 @@ And we can transform it to lowercase with the .lower() method:
     "{txt.lower()}"
 And we can capitalize with the .capitalize() method:
     "{txt.lower().capitalize()}"
-And mucho more.
+And much more.
 <<<''')
 
     keyword = "ring"

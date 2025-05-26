@@ -1,0 +1,2 @@
+This is a test file with some content and some formating.
+Hello {name} with age {age:2d}!!
