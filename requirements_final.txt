@@ -4,3 +4,6 @@ requests
 flask
 pytest
 pytest-mock
+numpy
+pandas
+matplotlib
