@@ -1,5 +1,5 @@
 import pytest
-import e2_complete as e2
+import e2
 
 
 def test_e2_exercise_1():

@@ -1,7 +1,7 @@
 import pytest
 from os import path, listdir
 import json
-import e5_complete as e5
+import e5
 
 @pytest.fixture
 def json_example():

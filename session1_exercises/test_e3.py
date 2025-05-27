@@ -1,5 +1,5 @@
 import pytest
-import e3_complete as e3
+import e3
 
 
 def test_e3_exercise_1():

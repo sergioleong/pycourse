@@ -1,5 +1,5 @@
 import pytest
-import e1_complete as e1
+import e1
 
 
 def test_e1_exercise_1(capsys):

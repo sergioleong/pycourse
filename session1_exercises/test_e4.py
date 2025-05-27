@@ -1,6 +1,6 @@
 import pytest
 from os import path, listdir
-import e4_complete as e4
+import e4
 
 @pytest.fixture
 def files_path():
