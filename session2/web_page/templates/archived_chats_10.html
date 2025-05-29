@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archived Chats - My Chatbot App</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+        .header .user-info {
+            font-size: 0.9em;
+        }
+        .header .user-info a {
+            color: #87CEEB; /* Light blue */
+            text-decoration: none;
+            margin-left: 15px;
+            transition: color 0.3s ease;
+        }
+        .header .user-info a:hover {
+            color: #ADD8E6; /* Lighter blue on hover */
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            max-width: 900px;
+            width: 100%;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .chat-list {
+            list-style: none;
+            padding: 0;
+        }
+        .chat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background-color: #f8f8f8;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+        .chat-item:hover {
+            background-color: #f0f0f0;
+        }
+        .chat-info {
+            flex-grow: 1;
+        }
+        .chat-info h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.2em;
+            color: #34495e;
+        }
+        .chat-info p {
+            margin: 0;
+            font-size: 0.85em;
+            color: #7f8c8d;
+        }
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-actions a, .chat-actions button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .chat-actions a:hover, .chat-actions button:hover {
+            background-color: #0056b3;
+        }
+        .chat-actions .unarchive-button {
+            background-color: #28a745; /* Green for unarchive */
+        }
+        .chat-actions .unarchive-button:hover {
+            background-color: #218838;
+        }
+        .empty-state {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 40px 0;
+        }
+        .flash-messages {
+            list-style: none;
+            padding: 0;
+            margin: 10px 20px;
+        }
+        .flash-messages li {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .flash-messages .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .flash-messages .danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .flash-messages .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        .back-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Archived Chats</h1>
+        <div class="user-info">
+            Logged in as: <strong>{{ username }}</strong>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+
+    {# Display flash messages if any #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <div class="main-content">
+        <h2>Your Archived Chats</h2>
+
+        {% if archived_chats %}
+            <ul class="chat-list">
+                {% for chat in archived_chats %}
+                    <li class="chat-item">
+                        <div class="chat-info">
+                            <h3>Chat with {{ chat.bot_name }}</h3>
+                            <p>Last message: {{ chat.last_message_at }} ({{ chat.message_count }} messages)</p>
+                            <p>Title: {{ chat.title }}</p>
+                        </div>
+                        <div class="chat-actions">
+                            <a href="{{ url_for('chat', id=chat.id) }}">View Chat</a>
+                            <button class="unarchive-button" data-chat-id="{{ chat.id }}">Unarchive</button>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-state">You have no archived chats.</p>
+        {% endif %}
+
+        <div class="back-link">
+            <a href="{{ url_for('index') }}">← Back to Active Chats</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const unarchiveButtons = document.querySelectorAll('.unarchive-button');
+
+            unarchiveButtons.forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    const chatId = event.target.dataset.chatId;
+
+                    if (!confirm('Are you sure you want to unarchive this chat? It will reappear in your active chats.')) {
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('/unarchive_chat', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ chat_id: parseInt(chatId) })
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        if (data.success && data.redirect_url) {
+                            alert('Chat unarchived successfully!');
+                            window.location.href = data.redirect_url; // Redirect to main portal
+                        } else {
+                            alert('Failed to unarchive chat.');
+                        }
+
+                    } catch (error) {
+                        console.error('Error unarchiving chat:', error);
+                        alert(`Error unarchiving chat: ${error.message}`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archived Chats - My Chatbot App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> {# Link to external CSS #}
+</head>
+<body>
+    <div class="header">
+        <h1>Archived Chats</h1>
+        <div class="user-info">
+            Logged in as: <strong>{{ username }}</strong>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+
+    {# Display flash messages if any #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <div class="main-content">
+        <h2>Your Archived Chats</h2>
+
+        {% if archived_chats %}
+            <ul class="chat-list">
+                {% for chat in archived_chats %}
+                    <li class="chat-item">
+                        {% set bot_info = available_bots.get(chat.bot_id, {'icon': 'default.png', 'name': 'Unknown Bot'}) %}
+                        {% if bot_info.icon %}
+                            <img src="{{ url_for('static', filename='bots/' + bot_info.icon) }}" alt="{{ bot_info.name }} Icon" class="chat-item-icon">
+                        {% endif %}
+                        <div class="chat-info">
+                            <h3>Chat with {{ chat.bot_name }}</h3>
+                            <p>Last message: {{ chat.last_message_at }} ({{ chat.message_count }} messages)</p>
+                            <p>Title: {{ chat.title }}</p>
+                        </div>
+                        <div class="chat-actions">
+                            <a href="{{ url_for('chat', id=chat.id) }}" class="button-link">View Chat</a>
+                            <button class="unarchive-button" data-chat-id="{{ chat.id }}">Unarchive</button>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-state">You have no archived chats.</p>
+        {% endif %}
+
+        <div class="back-link">
+            <a href="{{ url_for('index') }}" class="button-link-secondary">← Back to Active Chats</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const unarchiveButtons = document.querySelectorAll('.unarchive-button');
+
+            unarchiveButtons.forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    const chatId = event.target.dataset.chatId;
+
+                    if (!confirm('Are you sure you want to unarchive this chat? It will reappear in your active chats.')) {
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('/unarchive_chat', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ chat_id: parseInt(chatId) })
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        if (data.success && data.redirect_url) {
+                            alert('Chat unarchived successfully!');
+                            window.location.href = data.redirect_url; // Redirect to main portal
+                        } else {
+                            alert('Failed to unarchive chat.');
+                        }
+
+                    } catch (error) {
+                        console.error('Error unarchiving chat:', error);
+                        alert(`Error unarchiving chat: ${error.message}`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,528 @@
+/* static/style.css */
+
+/* General Body Styles */
+body {
+    font-family: 'Inter', sans-serif; /* Using a modern sans-serif font */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #1a1a1a; /* Dark background */
+    color: #f0f0f0; /* Light text */
+    line-height: 1.6;
+}
+
+/* Header Styles */
+.header {
+    background-color: #0a0a0a; /* Even darker header */
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Darker shadow */
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: 600;
+}
+
+.header .user-info {
+    font-size: 0.9em;
+}
+
+.header .user-info a {
+    color: #FFA726; /* Orange tint for links */
+    text-decoration: none;
+    margin-left: 15px;
+    transition: color 0.3s ease;
+}
+
+.header .user-info a:hover {
+    color: #FB8C00; /* Darker orange on hover */
+}
+
+/* Main Content Area */
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    max-width: 900px;
+    width: 100%;
+    margin: 20px auto;
+    background-color: #2a2a2a; /* Darker content background */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Darker shadow */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Section Titles */
+h2 {
+    color: #f0f0f0; /* Light text for titles */
+    border-bottom: 2px solid #444444; /* Darker border */
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.section-title {
+    text-align: center;
+    color: #f0f0f0; /* Light text for section titles */
+    margin-bottom: 25px;
+    font-size: 1.6em;
+    position: relative;
+    font-weight: 700;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: #FF9800; /* Primary orange color */
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+/* Bot Grid (for index page) */
+.bots-available, .chats-list {
+    margin-bottom: 30px;
+}
+
+.bot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 0 20px;
+}
+
+.bot-card-link {
+    text-decoration: none; /* Remove underline from the link */
+    color: inherit; /* Inherit text color from parent */
+    display: block; /* Make the link take up the full card area */
+    /* Transition for the link itself, if any specific link hover effects are desired */
+}
+
+.bot-card {
+    background-color: #3a3a3a; /* Darker background for bot cards */
+    border: 1px solid #555555; /* Darker border */
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* Darker shadow */
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease; /* Added background-color transition */
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    height: 100%; /* Ensure cards in grid have consistent height */
+}
+
+/* Apply hover effects to the card when the link is hovered */
+.bot-card-link:hover .bot-card {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25); /* Darker shadow on hover */
+    background-color: #4a4a4a; /* Slightly darker background on hover */
+}
+
+/* Bot Icon Styling (for new chat cards) */
+.bot-icon {
+    width: 80px; /* Adjust size as needed */
+    height: 80px; /* Maintain aspect ratio */
+    border-radius: 50%; /* Make it circular */
+    object-fit: cover; /* Ensure image covers the area without distortion */
+    margin-bottom: 15px; /* Space between icon and text */
+    border: 3px solid #FF9800; /* Orange border around the icon */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.bot-card h3 {
+    color: #FFCC80; /* Lighter orange for bot card title */
+    margin-top: 0;
+    font-size: 1.4em;
+    font-weight: 600;
+}
+
+.bot-card p {
+    color: #cccccc; /* Lighter text for description */
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin-bottom: 15px;
+}
+
+/* Common Button/Link Styles */
+.button-link,
+.chat-actions a,
+.chat-actions button,
+.input-area button,
+.portal-actions a {
+    background-color: #FF9800; /* Primary orange */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px; /* Slightly rounded corners */
+    cursor: pointer;
+    font-size: 1em;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block; /* Allows padding and margin */
+    text-align: center;
+}
+
+.button-link:hover,
+.chat-actions a:hover,
+.chat-actions button:hover,
+.input-area button:hover,
+.portal-actions a:hover {
+    background-color: #FB8C00; /* Darker orange on hover */
+    transform: translateY(-2px);
+}
+
+/* Specific button colors */
+.chat-actions .archive-button {
+    background-color: #D32F2F; /* Darker red for archive */
+}
+.chat-actions .archive-button:hover {
+    background-color: #C62828; /* Even darker red on hover */
+}
+.chat-actions .unarchive-button {
+    background-color: #4CAF50; /* Complementary dark mode green for unarchive */
+}
+.chat-actions .unarchive-button:hover {
+    background-color: #388E3C; /* Darker complementary green on hover */
+}
+.portal-actions a {
+    background-color: #555555; /* Darker grey for general portal actions */
+}
+.portal-actions a:hover {
+    background-color: #444444;
+}
+
+
+/* Chat List (for index and archived chats pages) */
+.chat-list {
+    list-style: none;
+    padding: 0 20px;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center; /* Align items vertically in the middle */
+    gap: 15px; /* Space between icon and info */
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    background-color: #3a3a3a; /* Darker grey background for chat items */
+    border: 1px solid #555555; /* Darker border */
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.chat-item:hover {
+    background-color: #4a4a4a; /* Slightly darker on hover */
+}
+
+/* Styling for icons within chat list items */
+.chat-item-icon {
+    width: 40px; /* Smaller size for list items */
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #FFAB40; /* Orange tint border */
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.chat-info {
+    flex-grow: 1;
+}
+
+.chat-info h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.2em;
+    color: #f0f0f0; /* Light text for chat item titles */
+}
+
+.chat-info p {
+    margin: 0;
+    font-size: 0.85em;
+    color: #bbbbbb; /* Lighter grey for chat item details */
+}
+
+.chat-actions {
+    /* Existing styles for chat actions, ensure they don't interfere with icon layout */
+    display: flex;
+    gap: 10px;
+    align-items: center; /* Align buttons with icon/text */
+}
+
+
+/* Empty State Message */
+.empty-state {
+    text-align: center;
+    color: #bbbbbb; /* Lighter grey */
+    padding: 40px 0;
+    font-style: italic;
+}
+
+/* Flash Messages */
+.flash-messages {
+    list-style: none;
+    padding: 0;
+    margin: 10px 20px;
+}
+
+.flash-messages li {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.flash-messages .success {
+    background-color: #4CAF50; /* Darker green */
+    color: white;
+    border: 1px solid #388E3C;
+}
+
+.flash-messages .danger {
+    background-color: #D32F2F; /* Darker red */
+    color: white;
+    border: 1px solid #C62828;
+}
+
+.flash-messages .info {
+    background-color: #2196F3; /* Darker blue */
+    color: white;
+    border: 1px solid #1976D2;
+}
+
+/* Chat Page Specific Styles */
+.chat-container {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 800px;
+    width: 100%;
+    margin: 20px auto;
+    background-color: #2a2a2a; /* Darker background */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.message {
+    max-width: 70%;
+    padding: 12px 18px;
+    border-radius: 10px;
+    line-height: 1.5;
+    word-wrap: break-word;
+    display: flex; /* Enable flexbox for message content */
+    align-items: center; /* Vertically align icon and text */
+    gap: 10px; /* Space between icon and text */
+}
+
+/* Message content div to control text wrapping */
+.message-content {
+    flex-grow: 1; /* Allow content to take available space */
+}
+
+.message.user {
+    background-color: #445566; /* Dark blue-grey for user messages */
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+    flex-direction: row-reverse; /* Reverse order for user messages (icon on right) */
+    color: #f0f0f0; /* Light text for user messages */
+}
+
+.message.ai {
+    background-color: #3a3a3a; /* Slightly different dark grey for AI messages */
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+    flex-direction: row; /* Default order for AI messages (icon on left) */
+    color: #f0f0f0; /* Light text for AI messages */
+}
+
+/* Styling for icons within chat messages */
+.message-icon {
+    width: 30px; /* Smaller size for chat messages */
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #FFAB40; /* Orange tint border for message icons */
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+
+.input-area {
+    padding: 20px;
+    background-color: #1a1a1a; /* Darker input area background */
+    border-top: 1px solid #444444; /* Darker border */
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.input-area textarea {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 1px solid #555555; /* Darker border */
+    background-color: #3a3a3a; /* Darker textarea background */
+    color: #f0f0f0; /* Light text */
+    border-radius: 8px;
+    font-size: 1em;
+    resize: none;
+    max-width: 600px;
+    box-sizing: border-box; /* Include padding in width */
+    font-family: 'Inter', sans-serif; /* Apply font to textarea as well */
+}
+.input-area textarea::placeholder {
+    color: #aaaaaa; /* Lighter placeholder text */
+}
+
+
+/* Common Action Button Area (for chat page, portal, etc.) */
+.chat-actions, .portal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    padding-bottom: 20px;
+}
+
+/* Login/Register Page Specific Styles */
+.auth-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.auth-box {
+    background-color: #2a2a2a; /* Darker background */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.auth-box h2 {
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: #f0f0f0; /* Light text */
+    font-size: 2em;
+}
+
+.auth-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.auth-box input[type="text"],
+.auth-box input[type="password"] {
+    padding: 12px 15px;
+    border: 1px solid #555555; /* Darker border */
+    background-color: #3a3a3a; /* Darker input background */
+    color: #f0f0f0; /* Light text */
+    border-radius: 8px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box; /* Include padding in width */
+    font-family: 'Inter', sans-serif;
+}
+.auth-box input[type="text"]::placeholder,
+.auth-box input[type="password"]::placeholder {
+    color: #aaaaaa; /* Lighter placeholder text */
+}
+
+.auth-box button[type="submit"] {
+    background-color: #4CAF50; /* Green for submit buttons */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.auth-box button[type="submit"]:hover {
+    background-color: #388E3C; /* Darker green on hover */
+}
+
+.register-link, .login-link {
+    margin-top: 20px;
+    font-size: 0.9em;
+}
+
+.register-link a, .login-link a {
+    color: #FF9800; /* Orange tint for links */
+    text-decoration: none;
+    transition: text-decoration 0.3s ease;
+}
+
+.register-link a:hover, .login-link a:hover {
+    text-decoration: underline;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9em;
+    color: #bbbbbb; /* Lighter grey */
+    justify-content: center;
+}
+
+/* 404 Page Specific Styles */
+.error-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.error-container h1 {
+    font-size: 5em;
+    margin-bottom: 10px;
+    color: #D32F2F; /* Darker red for error */
+}
+
+.error-container p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    color: #bbbbbb; /* Lighter grey */
+}
+
+.error-container .button-link {
+    padding: 12px 30px;
+    font-size: 1.1em;
+}
+
+/* Back links for archived chats and 404 */
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+}
+
+.back-link a {
+    color: #FF9800; /* Orange tint for links */
+    text-decoration: none;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}

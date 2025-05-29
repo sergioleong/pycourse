@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Portal - My Chatbot App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> {# Link to external CSS #}
+</head>
+<body>
+    <div class="header">
+        <h1>Chat Portal</h1>
+        <div class="user-info">
+            Logged in as: <strong>{{ username }}</strong>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+
+    {# Display flash messages if any #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <div class="main-content">
+        <div class="bots-available">
+            <h2 class="section-title">Start a New Chat</h2>
+            <div class="bot-grid">
+                {% for bot_id, bot in available_bots.items() %}
+                <a href="{{ url_for('chat', bot=bot_id) }}" class="bot-card-link"> {# Wrap the entire card in a link #}
+                    <div class="bot-card">
+                        {% if bot.icon %}
+                            <img src="{{ url_for('static', filename='bots/' + bot.icon) }}" alt="{{ bot.name }} Icon" class="bot-icon">
+                        {% endif %}
+                        <h3>{{ bot.name }}</h3>
+                        <p>{{ bot.description }}</p>
+                        {# Removed the "Chat Now" button as the whole card is now clickable #}
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="chats-list">
+            <h2 class="section-title">Your Existing Chats</h2>
+            {% if user_chats %}
+                <ul class="chat-list">
+                    {% for chat in user_chats %}
+                        <li class="chat-item">
+                            {% set bot_info = available_bots.get(chat.bot_id, {'icon': 'default.png', 'name': 'Unknown Bot'}) %}
+                            {% if bot_info.icon %}
+                                <img src="{{ url_for('static', filename='bots/' + bot_info.icon) }}" alt="{{ bot_info.name }} Icon" class="chat-item-icon">
+                            {% endif %}
+                            <div class="chat-info">
+                                <h3>{{ chat.title }}</h3>
+                                <p>with {{ chat.bot_name }} - Last updated: {{ chat.last_message_at }}</p>
+                            </div>
+                            <div class="chat-actions">
+                                <a href="{{ url_for('chat', id=chat.id) }}" class="button-link">Continue Chat</a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">You have no active chats. Start one above!</p>
+            {% endif %}
+        </div>
+        <div class="portal-actions">
+            <a href="{{ url_for('archived_chats') }}" class="button-link">View Archived Chats</a>
+        </div>
+    </div>
+</body>
+</html>

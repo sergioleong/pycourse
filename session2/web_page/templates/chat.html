@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with {{ bot_name }} - My Chatbot App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> {# Link to external CSS #}
+</head>
+<body>
+    <div class="header">
+        <h1>Chat with {{ bot_name }}</h1>
+        <div class="user-info">
+            Logged in as: <strong>{{ username }}</strong>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+
+    {# Display flash messages if any #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <div class="chat-container" id="chat-container">
+        {% if not chat_history %}
+            <div class="message ai">
+                {% set bot_info = available_bots.get(bot_id, {'icon': 'default.png', 'name': 'AI Assistant'}) %} {# Assuming bot_id is passed or derived #}
+                {% if bot_info.icon %}
+                    <img src="{{ url_for('static', filename='bots/' + bot_info.icon) }}" alt="{{ bot_info.name }} Icon" class="message-icon">
+                {% endif %}
+                <div class="message-content">{{ welcome_message }}</div>
+            </div>
+        {% endif %}
+        {% for message in chat_history %}
+            <div class="message {{ message.role }}">
+                {% if message.role == 'user' %}
+                    <img src="{{ url_for('static', filename='user_icon.png') }}" alt="User Icon" class="message-icon">
+                {% else %} {# Assuming role is 'assistant' #}
+                    {% set bot_info = available_bots.get(bot_id, {'icon': 'default.png', 'name': 'AI Assistant'}) %} {# Assuming bot_id is passed or derived #}
+                    {% if bot_info.icon %}
+                        <img src="{{ url_for('static', filename='bots/' + bot_info.icon) }}" alt="{{ bot_info.name }} Icon" class="message-icon">
+                    {% endif %}
+                {% endif %}
+                <div class="message-content">{{ message.content }}</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="input-area">
+        <textarea id="user-input" placeholder="Type your message..." rows="3"></textarea>
+        <button id="send-button">Send</button>
+    </div>
+    <div class="chat-actions">
+        <a href="{{ url_for('index') }}" class="button-link">← Back to Chat Portal</a>
+        <button id="archive-chat-button" class="archive-button">Archive Chat</button>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const archiveButton = document.getElementById('archive-chat-button');
+
+        // Get the chat_id directly from the URL query parameters for robustness
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentChatId = urlParams.get('id'); // This will be a string or null
+
+        // Function to add a message to the chat display
+        function addMessage(text, sender, iconSrc, iconAlt) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+
+            const iconImg = document.createElement('img');
+            iconImg.src = iconSrc;
+            iconImg.alt = iconAlt;
+            iconImg.classList.add('message-icon');
+
+            const messageContentDiv = document.createElement('div');
+            messageContentDiv.classList.add('message-content');
+            messageContentDiv.textContent = text;
+
+            if (sender === 'user') {
+                messageDiv.appendChild(messageContentDiv);
+                messageDiv.appendChild(iconImg); // User icon on the right
+            } else { // ai
+                messageDiv.appendChild(iconImg); // AI icon on the left
+                messageDiv.appendChild(messageContentDiv);
+            }
+
+            chatContainer.appendChild(messageDiv);
+            // Scroll to the bottom to show the latest message
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Function to send message to the API
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (message === '') return; // Don't send empty messages
+
+            // Ensure chat_id is available before sending
+            if (!currentChatId) {
+                addMessage('Error: Chat ID not found. Please go back to the portal and select a chat.', 'ai', '{{ url_for("static", filename="bots/default.png") }}', 'Default Bot Icon');
+                console.error('Chat ID is missing. Cannot send message.');
+                return;
+            }
+
+            console.log('Sending message with chat_id:', currentChatId); // Log the string value
+            console.log('Parsed chat_id for payload:', parseInt(currentChatId)); // Log the parsed integer value
+
+            // Add user message with user icon
+            addMessage(message, 'user', '{{ url_for("static", filename="user_icon.png") }}', 'User Icon');
+            userInput.value = ''; // Clear input field
+
+            // Indicate loading
+            addMessage('AI is typing...', 'ai', '{{ url_for("static", filename="bots/" + available_bots.get(bot_id, {}).icon if available_bots.get(bot_id, {}).icon else "default.png") }}', 'AI Icon');
+            const loadingMessage = chatContainer.lastChild; // Get reference to "AI is typing..."
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    // Send chat_id along with the message
+                    body: JSON.stringify({ message: message, chat_id: parseInt(currentChatId) }) // Parse to int
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                chatContainer.removeChild(loadingMessage); // Remove loading message
+                // Add AI's response with AI icon
+                addMessage(data.response, 'ai', '{{ url_for("static", filename="bots/" + available_bots.get(bot_id, {}).icon if available_bots.get(bot_id, {}).icon else "default.png") }}', 'AI Icon');
+
+            } catch (error) {
+                console.error('Error sending message:', error);
+                chatContainer.removeChild(loadingMessage); // Remove loading message
+                addMessage(`Error: ${error.message}`, 'ai', '{{ url_for("static", filename="bots/default.png") }}', 'Default Bot Icon'); // Display error with default AI icon
+            }
+        }
+
+        // Event listener for the send button
+        sendButton.addEventListener('click', sendMessage);
+
+        // Event listener for Enter key in the textarea
+        userInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault(); // Prevent new line
+                sendMessage();
+            }
+        });
+
+        // Initial scroll to bottom when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        });
+    </script>
+</body>
+</html>

@@ -7,3 +7,5 @@ pytest-mock
 numpy
 pandas
 matplotlib
+werkzeug
+sqlalchemy
