@@ -49,4 +49,4 @@ By default, dotenv loads the ".env" file in the current directory.
 If you need to load different environment files, you can use the "load_dotenv()" function and pass the path of your .env file as a parameter.
 
 For example:    
-oad_dotenv(".dev.env")
+load_dotenv(".dev.env")
